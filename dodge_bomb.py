@@ -69,6 +69,14 @@ def gameover(screen: pg.Surface) -> None:
 
 
 def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
+    """爆弾の Surface のリストと，速度のリストをまとめたタプルを返す。
+
+    Returns
+    ----------
+    tuple[list[pg.Surface], list[int]]
+        爆弾の Surface のリストと，速度のリストをまとめたタプル
+    """
+
     bb_imgs: list[pg.Surface] = []
     for r in range(1, 11):
         bb_img = pg.Surface((20*r, 20*r))
@@ -80,6 +88,14 @@ def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
 
 
 def get_kk_imgs() -> dict[tuple[int, int], pg.Surface]:
+    """移動量に対応するこうかとんの Surface をいれた dict を返す。
+
+    Returns
+    ----------
+    dict[tuple[int, int], pg.Surface]
+        移動量 tuple[int, int] に対応して回転・反転されたこうかとんの pg.Surface
+    """
+
     kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9)
     kk_dict = {
         (0, 0): pg.transform.rotozoom(kk_img, 0, 1.0),
