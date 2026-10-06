@@ -128,6 +128,7 @@ def main():
     bb_rct.center = random.randint(0, WIDTH), random.randint(0, HEIGHT)
     vx, vy = +5, +5
     kk_imgs = get_kk_imgs()
+
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT:
