@@ -79,6 +79,22 @@ def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
     return bb_imgs, bb_accs
 
 
+def get_kk_imgs() -> dict[tuple[int, int], pg.Surface]:
+    kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9)
+    kk_dict = {
+        (0, 0): pg.transform.rotozoom(kk_img, 0, 1.0),
+        (-5, 5): pg.transform.rotozoom(kk_img, 45, 1.0),
+        (-5, 0): pg.transform.rotozoom(kk_img, 0, 1.0),
+        (-5, -5): pg.transform.rotozoom(kk_img, -45, 1.0),
+        (0, -5): pg.transform.rotozoom(pg.transform.flip(kk_img, False, True), -2*45, 1.0),
+        (5, -5): pg.transform.rotozoom(pg.transform.flip(kk_img, False, True), -3*45, 1.0),
+        (5, 0): pg.transform.rotozoom(pg.transform.flip(kk_img, False, True), 180, 1.0),
+        (5, 5): pg.transform.rotozoom(pg.transform.flip(kk_img, False, True), 3*45, 1.0),
+        (0, 5): pg.transform.rotozoom(pg.transform.flip(kk_img, False, True), 2*45, 1.0),
+    }
+    return kk_dict
+
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -95,6 +111,7 @@ def main():
     bb_imgs, bb_accs = init_bb_imgs()
     bb_rct.center = random.randint(0, WIDTH), random.randint(0, HEIGHT)
     vx, vy = +5, +5
+    kk_imgs = get_kk_imgs()
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -113,6 +130,7 @@ def main():
                 sum_mv[0] += dx
                 sum_mv[1] += dy
         kk_rct.move_ip(sum_mv)
+        kk_img = kk_imgs[tuple(sum_mv)]
         if check_bound(kk_rct) != (True, True):
             sum_mv[0] *= -1
             sum_mv[1] *= -1
