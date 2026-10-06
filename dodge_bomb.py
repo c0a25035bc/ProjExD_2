@@ -54,6 +54,10 @@ def main():
                 return
         screen.blit(bg_img, [0, 0])
 
+        if kk_rct.colliderect(bb_rct):
+            print("GAME OVER")
+            return
+
         key_lst = pg.key.get_pressed()
         sum_mv = [0, 0]
         for k, (dx, dy) in DELTA.items():
