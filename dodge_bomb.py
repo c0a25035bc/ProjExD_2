@@ -1,6 +1,7 @@
 import os
 import sys
 import random
+import time
 
 import pygame as pg
 
@@ -13,6 +14,7 @@ DELTA = {
     pg.K_RIGHT: (+5, 0)
 }
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 
 def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
     """Rect が画面に収まっているかを判定する
@@ -28,9 +30,42 @@ def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
         (横方向の判定結果, 縦方向の判定結果) のタプル（内側なら True で外側なら False）
     """
 
-    horizontal  = rct.left >= 0 and rct.right <= WIDTH
+    horizontal = rct.left >= 0 and rct.right <= WIDTH
     vertical = rct.top >= 0 and rct.bottom <= HEIGHT
     return horizontal, vertical
+
+
+def gameover(screen: pg.Surface) -> None:
+    """ゲームオーバー画面を表示する
+
+    Parameters
+    ----------
+    screen : pg.Surface
+        画面判定対象の Surface
+    """
+
+    # 黒い矩形 Surface (ゲームオーバー画面) を作成
+    gameover_img = pg.Surface((WIDTH, HEIGHT))
+
+    # ゲームオーバー画面の透明度
+    gameover_img.set_alpha(200)
+
+    # 白文字の Game Over をゲームオーバー画面に blit
+    text_font = pg.font.Font(None, 80)
+    text_surface = text_font.render("Game Over", True, (255, 255, 255))
+    gameover_img.blit(text_surface, [405, 265])
+
+    # こうかとんの画像をゲームオーバー画面に blit
+    kk_img = pg.image.load("fig/8.png")
+    gameover_img.blit(kk_img, [730, 260])
+    gameover_img.blit(kk_img, [340, 260])
+
+    # ゲームオーバー画面をスクリーンに blit
+    screen.blit(gameover_img, [0, 0])
+
+    # ちょっと待つ
+    pg.display.update()
+    time.sleep(5)
 
 
 def main():
@@ -56,6 +91,7 @@ def main():
 
         if kk_rct.colliderect(bb_rct):
             print("GAME OVER")
+            gameover(screen)
             return
 
         key_lst = pg.key.get_pressed()
