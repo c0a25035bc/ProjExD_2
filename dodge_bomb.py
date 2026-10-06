@@ -14,6 +14,24 @@ DELTA = {
 }
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
+def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
+    """Rect が画面に収まっているかを判定する
+
+    Parameters
+    ----------
+    rct : pg.Rect
+        範囲判定対象の Rect
+
+    Returns
+    ----------
+    tuple[bool, bool]
+        (横方向の判定結果, 縦方向の判定結果) のタプル（内側なら True で外側なら False）
+    """
+
+    horizontal  = rct.left >= 0 and rct.right <= WIDTH
+    vertical = rct.top >= 0 and rct.bottom <= HEIGHT
+    return horizontal, vertical
+
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -43,8 +61,17 @@ def main():
                 sum_mv[0] += dx
                 sum_mv[1] += dy
         kk_rct.move_ip(sum_mv)
+        if check_bound(kk_rct) != (True, True):
+            sum_mv[0] *= -1
+            sum_mv[1] *= -1
+            kk_rct.move_ip(sum_mv)
         screen.blit(kk_img, kk_rct)
         bb_rct.move_ip(vx, vy)
+        bb_rct_check = check_bound(bb_rct)
+        if not bb_rct_check[0]:
+            vx = -vx
+        if not bb_rct_check[1]:
+            vy = -vy
         screen.blit(bb_img, bb_rct)
         pg.display.update()
         tmr += 1
